@@ -41,7 +41,7 @@ public class Template {
 		}
 	}
 	public void put() throws DbxException, IOException{
-		ByteArrayInputStream in = null;
+		ByteArrayInputStream in = new ByteArrayInputStream(new byte[] {'1'}); //Det her er fucked
 		ConnectionInit.client.uploadFile(path, DbxWriteMode.add(), -1, in);
 		return;
 	}

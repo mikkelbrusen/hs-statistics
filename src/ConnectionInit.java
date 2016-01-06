@@ -10,11 +10,12 @@ public class ConnectionInit {
 	public static DbxAppInfo appInfo;
 	public static DbxRequestConfig config;
 	public static DbxClient client;
-		
+
 	public static void main(String args[]) {
 		init();
 		
-		
+		Feed feed = new Feed();
+		feed.start();
 	}
 	
 	public static void init() {
