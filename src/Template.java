@@ -1,6 +1,7 @@
 import com.dropbox.core.DbxEntry;
 import com.dropbox.core.DbxException;
 import com.dropbox.core.DbxWriteMode;
+
 import java.io.*;
 
 public class Template {
@@ -40,6 +41,36 @@ public class Template {
 			}
 		}
 	}
+	
+	public void getByPrefix() throws DbxException, IOException{	
+		DbxEntry.WithChildren listing;
+		String name_aux=name;
+
+		// Repeat until one file/tuple is found
+		while(true){				
+			listing = ConnectionInit.client.getMetadataWithChildren(path);
+
+			for (DbxEntry child : listing.children) {	
+				if(child.name.startsWith(name_aux)){
+					name_aux=child.name;
+					name=name_aux;
+					ByteArrayOutputStream out=new ByteArrayOutputStream();
+					ConnectionInit.client.getFile(child.path,null,out);
+					out.close();
+					ConnectionInit.client.delete(child.path);
+					return;	
+				}
+			} 
+
+			System.out.println("Blocking operation (qry/get) was unsucessful, sleeping for a while...");
+			try {
+				Thread.sleep(10000);
+			} catch(InterruptedException ex) {
+				Thread.currentThread().interrupt();
+			}
+		}
+	}
+	
 	public void put() throws DbxException, IOException{
 		ByteArrayInputStream in = new ByteArrayInputStream(new byte[] {'1'}); //Det her er fucked
 		ConnectionInit.client.uploadFile(path, DbxWriteMode.add(), -1, in);

@@ -16,6 +16,8 @@ public class ConnectionInit {
 		
 		Feed feed = new Feed();
 		feed.start();
+		GeneralFeeds generalFeeds = new GeneralFeeds();
+		generalFeeds.start();
 	}
 	
 	public static void init() {
