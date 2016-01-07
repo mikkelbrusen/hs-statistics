@@ -20,8 +20,12 @@ public class ConnectionInit {
 		{
 			feed[i] = new Feed();
 			feed[i].start();
-		}		UserFeeds userFeeds = new UserFeeds();
-		userFeeds.start();	}
+		}
+		GeneralFeeds generalFeed = new GeneralFeeds();
+		generalFeed.start();
+		UserFeeds userFeeds = new UserFeeds();
+		userFeeds.start();	
+	}
 	
 	public static void init() {
 		final String APP_KEY = "75ozb45t6z1tq24";
