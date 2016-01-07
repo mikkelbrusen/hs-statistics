@@ -7,12 +7,12 @@ import java.io.*;
 public class Template {
 	String path;
 	String name;
-	
+
 	public Template(String path, String name) {
 		this.path = path;
 		this.name = name;
 	}
-	
+
 	public void get() throws DbxException, IOException{	
 		DbxEntry.WithChildren listing;
 		String name_aux=name;
@@ -21,15 +21,15 @@ public class Template {
 		while(true){
 			listing = ConnectionInit.client.getMetadataWithChildren(path);
 			for (DbxEntry child : listing.children) {
-				
-					name_aux=child.name;
-					name=name_aux;									
-					ByteArrayOutputStream out=new ByteArrayOutputStream();
-					ConnectionInit.client.getFile(child.path,null,out);
-					out.close();
-					ConnectionInit.client.delete(child.path);
-					return;
-				       	
+
+				name_aux=child.name;
+				name=name_aux;									
+				ByteArrayOutputStream out=new ByteArrayOutputStream();
+				ConnectionInit.client.getFile(child.path,null,out);
+				out.close();
+				ConnectionInit.client.delete(child.path);
+				return;
+
 			}
 			// Simple implementation based on busy-wait
 			// We hence insert a delay of 10 seconds to minimise unsucessful checks
@@ -41,40 +41,45 @@ public class Template {
 			}
 		}
 	}
-	
-	public void getByPrefix() throws DbxException, IOException{	
+
+	// is stuck if tracking file is not found!!
+	public boolean existsWithPrefix() throws DbxException{	
 		DbxEntry.WithChildren listing;
 		String name_aux=name;
 
-		// Repeat until one file/tuple is found
-		while(true){				
-			listing = ConnectionInit.client.getMetadataWithChildren(path);
-
+		// Repeat until one file/tuple is found				
+		listing = ConnectionInit.client.getMetadataWithChildren(path);
+		if(listing != null){
 			for (DbxEntry child : listing.children) {	
-				if(child.name.startsWith(name_aux)){
+				if(child.name.startsWith(name_aux)){				
 					name_aux=child.name;
 					name=name_aux;
 					ByteArrayOutputStream out=new ByteArrayOutputStream();
-					ConnectionInit.client.getFile(child.path,null,out);
-					out.close();
+					try {
+						ConnectionInit.client.getFile(child.path,null,out);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					try {
+						out.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					ConnectionInit.client.delete(child.path);
-					return;	
+					return true;	
 				}
 			} 
-
-			System.out.println("Blocking operation (qry/get) was unsucessful, sleeping for a while...");
-			try {
-				Thread.sleep(10000);
-			} catch(InterruptedException ex) {
-				Thread.currentThread().interrupt();
-			}
 		}
+		return false;
+
 	}
-	
+
 	public void put() throws DbxException, IOException{
 		ByteArrayInputStream in = new ByteArrayInputStream(new byte[] {'1'}); //Det her er fucked
 		ConnectionInit.client.uploadFile(path, DbxWriteMode.add(), -1, in);
 		return;
 	}
-	
+
 }

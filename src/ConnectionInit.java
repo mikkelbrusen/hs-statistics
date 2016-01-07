@@ -14,16 +14,14 @@ public class ConnectionInit {
 	
 	public static void main(String args[]) {
 		init();
-		
+
 		feed = new Feed[2];
 		for (int i = 0; i < 2; i++) 
 		{
 			feed[i] = new Feed();
 			feed[i].start();
-		}
-		GeneralFeeds generalFeeds = new GeneralFeeds();
-		generalFeeds.start();
-	}
+		}		UserFeeds userFeeds = new UserFeeds();
+		userFeeds.start();	}
 	
 	public static void init() {
 		final String APP_KEY = "75ozb45t6z1tq24";
