@@ -42,33 +42,38 @@ public class Template {
 		}
 	}
 	
-	public void getByPrefix() throws DbxException, IOException{	
+	// is stuck if tracking file is not found!!
+	public boolean existsWithPrefix() throws DbxException{	
 		DbxEntry.WithChildren listing;
 		String name_aux=name;
 
-		// Repeat until one file/tuple is found
-		while(true){				
+		// Repeat until one file/tuple is found				
 			listing = ConnectionInit.client.getMetadataWithChildren(path);
-
+			if(listing != null){
 			for (DbxEntry child : listing.children) {	
-				if(child.name.startsWith(name_aux)){
+				if(child.name.startsWith(name_aux)){				
 					name_aux=child.name;
 					name=name_aux;
 					ByteArrayOutputStream out=new ByteArrayOutputStream();
-					ConnectionInit.client.getFile(child.path,null,out);
-					out.close();
+					try {
+						ConnectionInit.client.getFile(child.path,null,out);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					try {
+						out.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					ConnectionInit.client.delete(child.path);
-					return;	
+					return true;	
 				}
 			} 
-
-			System.out.println("Blocking operation (qry/get) was unsucessful, sleeping for a while...");
-			try {
-				Thread.sleep(10000);
-			} catch(InterruptedException ex) {
-				Thread.currentThread().interrupt();
 			}
-		}
+			return false;
+		
 	}
 	
 	public void put() throws DbxException, IOException{

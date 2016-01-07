@@ -1,8 +1,8 @@
-public class GeneralFeeds extends Thread{
+public class UserFeeds extends Thread{
 
 
-	final String feed = "/space/GeneralData";
-	final String general = "/space/General";
+	final String feed = "/space/UserData";
+	final String users = "/space/Users";
 
 
 	// Two tuple templates for the main loop of the app
@@ -25,8 +25,9 @@ public class GeneralFeeds extends Thread{
 					String winCon = endPart[0];
 					
 					
-					t2 = new Template(general,parts[1]);
+					t2 = new Template(users + "/" + parts[0] + "/Statistics",parts[1]);
 					System.out.println("Looking for some file...");
+					
 					if(t2.existsWithPrefix()){
 					
 					String[] parts2 = t2.name.split("_");
@@ -40,18 +41,18 @@ public class GeneralFeeds extends Thread{
 						lossCount++;
 					}
 					
-					t3 = new Template("/space/General/" + parts[1] + "_" + winCount + "_" + lossCount,t2.name);
+					t3 = new Template("/space/Users/" + parts[0] + "/Statistics/" + parts[1] + "_" + winCount + "_" + lossCount,t2.name);
 					System.out.println("Putting the file in its corresponding subfolder...");
 					t3.put();
 					
 					} else {
 						
 					if(winCon.equals("Win")){
-						t3 = new Template("/space/General/" + parts[1] + "_" + 1 + "_" + 0,t2.name);
+						t3 = new Template("/space/Users/" + parts[0] + "/Statistics/" + parts[1] + "_" + 1 + "_" + 0,t2.name);
 						System.out.println("Putting the file in its corresponding subfolder...");
 						t3.put();
 					} else {
-						t3 = new Template("/space/General/" + parts[1] + "_" + 0 + "_" + 1,t2.name);
+						t3 = new Template("/space/Users/" + parts[0] + "/Statistics/" + parts[1] + "_" + 0 + "_" + 1,t2.name);
 						System.out.println("Putting the file in its corresponding subfolder...");
 						t3.put();
 					}

@@ -14,10 +14,12 @@ public class ConnectionInit {
 	public static void main(String args[]) {
 		init();
 		
-		Feed feed = new Feed();
-		feed.start();
-		GeneralFeeds generalFeeds = new GeneralFeeds();
-		generalFeeds.start();
+		//Feed feed = new Feed();
+		//feed.start();
+		//GeneralFeeds generalFeeds = new GeneralFeeds();
+		//generalFeeds.start();
+		UserFeeds userFeeds = new UserFeeds();
+		userFeeds.start();
 	}
 	
 	public static void init() {
