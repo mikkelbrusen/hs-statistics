@@ -58,19 +58,19 @@ public class ReqAccFeed extends Thread {
 					if (!result2.isEmpty() && result3.isEmpty()) //The opposite client has received a req aswell
 					{
 						ByteArrayInputStream in = new ByteArrayInputStream(new byte[] {'1'}); //Det her er fucked
-						ConnectionInit.client.uploadFile("/space/feed/ACC_" + parts[1] + "_" + parts[2] + "." + parts1[1],
+						ConnectionInit.client.uploadFile("/space/FriendReqAcc/ACC_" + parts[1] + "_" + parts[2] + "." + parts1[1],
 								DbxWriteMode.add(), -1, in); //Make access file
-						return;
+						continue;
 					}
 					else if (!result1.isEmpty() || !result3.isEmpty()) //Dont send the req further, since it exists already
 					{
-						return;
+						continue;
 					}
 					else //Move request file to user req folder
 					{
-						Template t2 = new Template(getUserReq(parts[1]) + t1.name, t1.name);
+						Template t2 = new Template(getUserReq(parts[1]) + "/" + t1.name, t1.name);
 						t2.put();					
-						return;
+						continue;
 					}
 					
 				}
@@ -92,9 +92,9 @@ public class ReqAccFeed extends Thread {
 					}
 					if (result3.isEmpty()) //If access does not exists
 					{
-						Template t2 = new Template(getUserAcc(parts[1]) + t1.name, t1.name);
+						Template t2 = new Template(getUserAcc(parts[1]) + "/" + t1.name, t1.name);
 						t2.put();
-						Template t3 = new Template(getUserAcc(parts[2]) + t1.name, t1.name);
+						Template t3 = new Template(getUserAcc(parts[2]) + "/" + t1.name, t1.name);
 						t3.put();
 					}
 					
