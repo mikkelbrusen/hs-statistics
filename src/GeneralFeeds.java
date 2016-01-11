@@ -9,6 +9,9 @@ public class GeneralFeeds extends Thread{
 	Template t1;
 	Template t2;
 	Template t3;
+	
+	static Semaphore multEx = new Semaphore(1);
+	boolean ewp = false;
 
 	public void run(){
 		try{
@@ -17,7 +20,9 @@ public class GeneralFeeds extends Thread{
 				// Template t1 represents "any file in the space folder"
 				t1 = new Template(feed,"?");
 				System.out.println("Looking for some file...");
+				try { multEx.P(); } catch (InterruptedException e) {} // The threads should not get the same file.
 				t1.get();
+				multEx.V();
 				System.out.println("Found file " + t1.name);
 
 				String[] parts = t1.name.split("_");
@@ -27,7 +32,12 @@ public class GeneralFeeds extends Thread{
 
 				t2 = new Template(general,parts[1]);
 				System.out.println("Looking for some file...");
-				if(t2.existsWithPrefix()){
+				
+				try { multEx.P(); } catch (InterruptedException e) {} // The threads should not get the same file.
+				ewp = t2.existsWithPrefix();
+				multEx.V();
+				
+				if(ewp){
 
 					String[] parts2 = t2.name.split("_");
 

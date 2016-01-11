@@ -11,6 +11,9 @@ public class ConnectionInit {
 	public static DbxRequestConfig config;
 	public static DbxClient client;
 	static Feed[] feed;
+	static UserFeeds[] Userfeed;
+	static GeneralFeeds[] Gfeed;
+	static ReqAccFeed[] RAfeed;
 	
 	public static void main(String args[]) {
 		init();
@@ -21,12 +24,24 @@ public class ConnectionInit {
 			feed[i] = new Feed();
 			feed[i].start();
 		}
-		//GeneralFeeds generalFeed = new GeneralFeeds();
-		//generalFeed.start();
-		//UserFeeds userFeeds = new UserFeeds();
-		//userFeeds.start();	
-		//ReqAccFeed raFeed = new ReqAccFeed();
-		//raFeed.start();
+		Userfeed = new UserFeeds[2];
+		for (int i = 0; i < 2; i++) 
+		{
+			Userfeed[i] = new UserFeeds();
+			Userfeed[i].start();
+		}
+		Gfeed = new GeneralFeeds[2];
+		for (int i = 0; i < 2; i++) 
+		{
+			Gfeed[i] = new GeneralFeeds();
+			Gfeed[i].start();
+		}
+		RAfeed = new ReqAccFeed[2];
+		for (int i = 0; i < 2; i++) 
+		{
+			RAfeed[i] = new ReqAccFeed();
+			RAfeed[i].start();
+		}
 	}
 	
 	public static void init() {
