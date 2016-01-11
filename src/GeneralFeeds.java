@@ -11,6 +11,17 @@ public class GeneralFeeds extends Thread{
 	Template t3;
 	
 	static Semaphore multEx = new Semaphore(1);
+	static Semaphore druid = new Semaphore(1);
+	static Semaphore hunter = new Semaphore(1);
+	static Semaphore mage = new Semaphore(1);
+	static Semaphore paladin = new Semaphore(1);
+	static Semaphore priest = new Semaphore(1);
+	static Semaphore rogue = new Semaphore(1);
+	static Semaphore shaman = new Semaphore(1);
+	static Semaphore warlock = new Semaphore(1);
+	static Semaphore warrior = new Semaphore(1);
+
+	
 	boolean ewp = false;
 
 	public void run(){
@@ -33,7 +44,7 @@ public class GeneralFeeds extends Thread{
 				t2 = new Template(general,parts[1]);
 				System.out.println("Looking for some file...");
 				
-				try { multEx.P(); } catch (InterruptedException e) {} // The threads should not get the same file.
+				psem(parts[1]);						//Takes class specific semaphore.
 				ewp = t2.existsWithPrefix();
 				multEx.V();
 				
@@ -69,11 +80,42 @@ public class GeneralFeeds extends Thread{
 
 
 				}	
+				vsem(parts[1]);
 			}
 
 		}
 		catch (Exception e) { e.printStackTrace();
 		}
+		
 
+	}	
+	private void psem(String c) {
+		switch (c) {
+		case "Druid": try { druid.P(); } catch (InterruptedException e) {}
+		case "Hunter": try { hunter.P(); } catch (InterruptedException e) {}
+		case "Mage": try { mage.P(); } catch (InterruptedException e) {}
+		case "Paladin": try { paladin.P(); } catch (InterruptedException e) {}
+		case "Priest": try { priest.P(); } catch (InterruptedException e) {}
+		case "Rogue": try { rogue.P(); } catch (InterruptedException e) {}
+		case "Shaman": try { shaman.P(); } catch (InterruptedException e) {}
+		case "Warlock": try { warlock.P(); } catch (InterruptedException e) {}
+		case "Warrior": try { warrior.P(); } catch (InterruptedException e) {}
+		default: return;
+		}
+	}	
+
+	private void vsem(String c) {
+		switch (c) {
+		case "Druid": druid.V();
+		case "Hunter": hunter.V();
+		case "Mage": mage.V();
+		case "Paladin": paladin.V();
+		case "Priest": priest.V();
+		case "Rogue": rogue.V();
+		case "Shaman": shaman.V();
+		case "Warlock": warlock.V();
+		case "Warrior": warrior.V();
+		default: return;
+		}
 	}	
 }
