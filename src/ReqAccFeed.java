@@ -60,9 +60,15 @@ public class ReqAccFeed extends Thread {
 				{
 					if (!result2.isEmpty() && result3.isEmpty() && result4.isEmpty()) //The opposite client has received a req aswell
 					{
-						ByteArrayInputStream in = new ByteArrayInputStream(new byte[] {'1'}); //Det her er fucked
-						ConnectionInit.client.uploadFile("/space/FriendRecAcc/ACC_" + parts[1] + "_" + parts[2] + "." + parts1[1],
-								DbxWriteMode.add(), -1, in); //Make access file
+						for (DbxEntry f : result2)
+						{
+							ConnectionInit.client.delete(f.path);
+						}
+						Template t2 = new Template(getUserAcc(parts[1]) + "/" + parts[2], parts[2]); 
+						t2.put();
+						Template t3 = new Template(getUserAcc(parts[2]) + "/" + parts[1], parts[1]); 
+						t3.put(); //Make access file
+						System.out.println(parts[1] + " and " + parts[2] + " are now friends.");
 						continue;
 					}
 					else if (!result1.isEmpty() || !result3.isEmpty() || !result4.isEmpty()) //Dont send the req further, since it exists already
@@ -75,32 +81,8 @@ public class ReqAccFeed extends Thread {
 						t2.put();					
 						continue;
 					}
-				}
-				else if (parts[0].equals("ACC"))
-				{
-					if (!result1.isEmpty()) //If it is access, delete the request
-					{
-						for (DbxEntry f : result1)
-						{
-							ConnectionInit.client.delete(f.path);
-						}
-					}
-					if (!result2.isEmpty()) //If it is access, delete the request
-					{
-						for (DbxEntry f : result2)
-						{
-							ConnectionInit.client.delete(f.path);
-						}
-					}
-					if (result3.isEmpty() && result4.isEmpty()) //If access does not exists
-					{
-						Template t2 = new Template(getUserAcc(parts[1]) + "/" + parts[2], parts[2]); 
-						t2.put();
-						Template t3 = new Template(getUserAcc(parts[2]) + "/" + parts[1], parts[1]); 
-						t3.put();
-					}
-					
-				}
+				} 
+				
 			}
 			
 		} catch (Exception e){ e.printStackTrace(); }
