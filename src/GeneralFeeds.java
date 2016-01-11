@@ -43,6 +43,7 @@ public class GeneralFeeds extends Thread{
 					t3 = new Template("/space/General/" + parts[1] + "_" + winCount + "_" + lossCount,t2.name);
 					System.out.println("Putting the file in its corresponding subfolder...");
 					t3.put();
+					t2.remove();
 
 				} else {
 

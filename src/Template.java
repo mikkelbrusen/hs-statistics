@@ -17,7 +17,6 @@ public class Template {
 		DbxEntry.WithChildren listing;
 		String name_aux=name;
 
-		// Repeat until one file/tuple is found
 		while(true){
 			listing = ConnectionInit.client.getMetadataWithChildren(path);
 			for (DbxEntry child : listing.children) {
@@ -29,10 +28,7 @@ public class Template {
 				out.close();
 				ConnectionInit.client.delete(child.path);
 				return;
-
-			}
-			// Simple implementation based on busy-wait
-			// We hence insert a delay of 10 seconds to minimise unsucessful checks
+			}			
 			System.out.println("Blocking operation (qry/get) was unsucessful, sleeping for a while...");
 			try {
 				Thread.sleep(10000);
@@ -41,19 +37,22 @@ public class Template {
 			}
 		}
 	}
+	
+	public void remove() throws DbxException{
+		ConnectionInit.client.delete(path);
+	}
 
-	// is stuck if tracking file is not found!!
 	public boolean existsWithPrefix() throws DbxException{	
 		DbxEntry.WithChildren listing;
 		String name_aux=name;
 
-		// Repeat until one file/tuple is found				
 		listing = ConnectionInit.client.getMetadataWithChildren(path);
 		if(listing != null){
 			for (DbxEntry child : listing.children) {	
 				if(child.name.startsWith(name_aux)){				
 					name_aux=child.name;
 					name=name_aux;
+					path = child.path;
 					ByteArrayOutputStream out=new ByteArrayOutputStream();
 					try {
 						ConnectionInit.client.getFile(child.path,null,out);
@@ -67,7 +66,6 @@ public class Template {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					ConnectionInit.client.delete(child.path);
 					return true;	
 				}
 			} 

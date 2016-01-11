@@ -21,12 +21,12 @@ public class ConnectionInit {
 			feed[i] = new Feed();
 			feed[i].start();
 		}
-		GeneralFeeds generalFeed = new GeneralFeeds();
-		generalFeed.start();
-		UserFeeds userFeeds = new UserFeeds();
-		userFeeds.start();	
-		ReqAccFeed raFeed = new ReqAccFeed();
-		raFeed.start();
+		//GeneralFeeds generalFeed = new GeneralFeeds();
+		//generalFeed.start();
+		//UserFeeds userFeeds = new UserFeeds();
+		//userFeeds.start();	
+		//ReqAccFeed raFeed = new ReqAccFeed();
+		//raFeed.start();
 	}
 	
 	public static void init() {
