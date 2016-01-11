@@ -50,6 +50,7 @@ public class ReqAccFeed extends Thread {
 				path3 = getUserAcc(parts[1]);
 				path4 = getUserAcc(parts[2]);
 
+				multEx.P();
 				result1 = ConnectionInit.client.searchFileAndFolderNames(path1, parts[2]);
 				result2 = ConnectionInit.client.searchFileAndFolderNames(path2, parts[1]);
 				result3 = ConnectionInit.client.searchFileAndFolderNames(path3, parts[2]);
@@ -65,23 +66,30 @@ public class ReqAccFeed extends Thread {
 							ConnectionInit.client.delete(f.path);
 						}
 						Template t2 = new Template(getUserAcc(parts[1]) + "/" + parts[2], parts[2]); 
-						t2.put();
+						t2.put(); //Make access file
 						Template t3 = new Template(getUserAcc(parts[2]) + "/" + parts[1], parts[1]); 
 						t3.put(); //Make access file
 						System.out.println(parts[1] + " and " + parts[2] + " are now friends.");
+						multEx.V();
 						continue;
 					}
 					else if (!result1.isEmpty() || !result3.isEmpty() || !result4.isEmpty()) //Dont send the req further, since it exists already
 					{
+						multEx.V();
 						continue;
 					}
 					else //Move request file to user req folder
 					{
 						Template t2 = new Template(getUserReq(parts[1]) + "/" + parts[2], parts[2]);
-						t2.put();					
+						t2.put();		
+						multEx.V();
 						continue;
 					}
 				} 
+				else
+				{
+					multEx.V();
+				}
 				
 			}
 			
