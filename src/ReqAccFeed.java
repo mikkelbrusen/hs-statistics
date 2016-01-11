@@ -50,8 +50,8 @@ public class ReqAccFeed extends Thread {
 				path3 = getUserAcc(parts[1]);
 				path4 = getUserAcc(parts[2]);
 
-				result1 = ConnectionInit.client.searchFileAndFolderNames(path1, parts1[0]);
-				result2 = ConnectionInit.client.searchFileAndFolderNames(path2, parts[1] + " " + parts[2]);
+				result1 = ConnectionInit.client.searchFileAndFolderNames(path1, parts[2]);
+				result2 = ConnectionInit.client.searchFileAndFolderNames(path2, parts[1]);
 				result3 = ConnectionInit.client.searchFileAndFolderNames(path3, parts[2]);
 				result4 = ConnectionInit.client.searchFileAndFolderNames(path4, parts[1]);
 
@@ -71,7 +71,7 @@ public class ReqAccFeed extends Thread {
 					}
 					else //Move request file to user req folder
 					{
-						Template t2 = new Template(getUserReq(parts[1]) + "/" + t1.name, t1.name);
+						Template t2 = new Template(getUserReq(parts[1]) + "/" + parts[2], parts[2]);
 						t2.put();					
 						continue;
 					}
