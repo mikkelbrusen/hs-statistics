@@ -25,6 +25,8 @@ public class ConnectionInit {
 		generalFeed.start();
 		UserFeeds userFeeds = new UserFeeds();
 		userFeeds.start();	
+		ReqAccFeed raFeed = new ReqAccFeed();
+		raFeed.start();
 	}
 	
 	public static void init() {

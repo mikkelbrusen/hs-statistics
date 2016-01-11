@@ -16,6 +16,7 @@ public class ReqAccFeed extends Thread {
 	private List<DbxEntry> result1;
 	private List<DbxEntry> result2;
 	private List<DbxEntry> result3;
+	private List<DbxEntry> result4;
 
 	
 	static Semaphore multEx = new Semaphore(1);
@@ -51,18 +52,20 @@ public class ReqAccFeed extends Thread {
 
 				result1 = ConnectionInit.client.searchFileAndFolderNames(path1, parts1[0]);
 				result2 = ConnectionInit.client.searchFileAndFolderNames(path2, parts[1] + " " + parts[2]);
-				result3 = ConnectionInit.client.searchFileAndFolderNames(path3, parts[1] + " " + parts[2]);
+				result3 = ConnectionInit.client.searchFileAndFolderNames(path3, parts[2]);
+				result4 = ConnectionInit.client.searchFileAndFolderNames(path4, parts[1]);
+
 				
 				if (parts[0].equals("REQ"))
 				{
-					if (!result2.isEmpty() && result3.isEmpty()) //The opposite client has received a req aswell
+					if (!result2.isEmpty() && result3.isEmpty() && result4.isEmpty()) //The opposite client has received a req aswell
 					{
 						ByteArrayInputStream in = new ByteArrayInputStream(new byte[] {'1'}); //Det her er fucked
-						ConnectionInit.client.uploadFile("/space/FriendReqAcc/ACC_" + parts[1] + "_" + parts[2] + "." + parts1[1],
+						ConnectionInit.client.uploadFile("/space/Feed/ACC_" + parts[1] + "_" + parts[2] + "." + parts1[1],
 								DbxWriteMode.add(), -1, in); //Make access file
 						continue;
 					}
-					else if (!result1.isEmpty() || !result3.isEmpty()) //Dont send the req further, since it exists already
+					else if (!result1.isEmpty() || !result3.isEmpty() || !result4.isEmpty()) //Dont send the req further, since it exists already
 					{
 						continue;
 					}
@@ -72,29 +75,28 @@ public class ReqAccFeed extends Thread {
 						t2.put();					
 						continue;
 					}
-					
 				}
 				else if (parts[0].equals("ACC"))
 				{
-					if (!result1.isEmpty()) //If it is accces, delete the request
+					if (!result1.isEmpty()) //If it is access, delete the request
 					{
 						for (DbxEntry f : result1)
 						{
 							ConnectionInit.client.delete(f.path);
 						}
 					}
-					if (!result2.isEmpty()) //If it is accces, delete the request
+					if (!result2.isEmpty()) //If it is access, delete the request
 					{
 						for (DbxEntry f : result2)
 						{
 							ConnectionInit.client.delete(f.path);
 						}
 					}
-					if (result3.isEmpty()) //If access does not exists
+					if (result3.isEmpty() && result4.isEmpty()) //If access does not exists
 					{
-						Template t2 = new Template(getUserAcc(parts[1]) + "/" + t1.name, t1.name);
+						Template t2 = new Template(getUserAcc(parts[1]) + "/" + parts[2], parts[2]); 
 						t2.put();
-						Template t3 = new Template(getUserAcc(parts[2]) + "/" + t1.name, t1.name);
+						Template t3 = new Template(getUserAcc(parts[2]) + "/" + parts[1], parts[1]); 
 						t3.put();
 					}
 					
