@@ -61,7 +61,7 @@ public class ReqAccFeed extends Thread {
 					if (!result2.isEmpty() && result3.isEmpty() && result4.isEmpty()) //The opposite client has received a req aswell
 					{
 						ByteArrayInputStream in = new ByteArrayInputStream(new byte[] {'1'}); //Det her er fucked
-						ConnectionInit.client.uploadFile("/space/Feed/ACC_" + parts[1] + "_" + parts[2] + "." + parts1[1],
+						ConnectionInit.client.uploadFile("/space/FriendRecAcc/ACC_" + parts[1] + "_" + parts[2] + "." + parts1[1],
 								DbxWriteMode.add(), -1, in); //Make access file
 						continue;
 					}
