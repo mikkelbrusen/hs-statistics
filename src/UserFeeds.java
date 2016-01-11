@@ -10,8 +10,16 @@ public class UserFeeds extends Thread{
 	Template t2;
 	Template t3;
 	
-	static Semaphore multEx, druid, hunter, mage, paladin, priest,
-					rogue, shaman, warlock, warrior = new Semaphore(1);
+	static Semaphore druid = new Semaphore(1);
+	static Semaphore hunter = new Semaphore(1);
+	static Semaphore mage = new Semaphore(1);
+	static Semaphore paladin = new Semaphore(1);
+	static Semaphore priest = new Semaphore(1);
+	static Semaphore rogue = new Semaphore(1);
+	static Semaphore shaman = new Semaphore(1);
+	static Semaphore warlock = new Semaphore(1);
+	static Semaphore warrior = new Semaphore(1);
+	static Semaphore multEx = new Semaphore(1);
 	boolean ewp = false;
 
 	public void run(){
