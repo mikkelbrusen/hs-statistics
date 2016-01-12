@@ -20,7 +20,7 @@ public class Feed extends Thread{
 				
 				String[] parts = t1.name.split("_");
 
-				if(parts[0].equals("REQ") || parts[0].equals("ACC")) {
+				if(parts[0].equals("REQ")) {
 					Template t2 = new Template("/space/FriendReqAcc/" + t1.name, t1.name);
 					t2.put();
 				} else {
