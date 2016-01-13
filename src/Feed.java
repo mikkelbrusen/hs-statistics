@@ -3,7 +3,9 @@ public class Feed extends Thread{
 	final String feed = "/space/Feed";
 	
 
-	Template t1,t2,t3;
+	Template t1,t2,t3,semaphore;
+	String semaphorePath = "/space/FeedSemaphore";
+
 	static Semaphore multEx = new Semaphore(1);
 	
 	public void run() 
@@ -12,10 +14,11 @@ public class Feed extends Thread{
 			while(true){
 				
 				t1 = new Template(feed,"?");
+                semaphore = new Template(semaphorePath, "feedSemaphore");
 				System.out.println("Looking for some file...");
-				try { multEx.P(); } catch (InterruptedException e) {} // The threads should not get the same file.
-				t1.get();
-				multEx.V();
+                try { semaphore.get(); } catch (Exception e) {continue;} // The threads should not get the same file.				t1.get();
+				semaphore.path = semaphorePath + "/feedSemaphore";
+				semaphore.put();
 				System.out.println("Found file " + t1.name);
 				
 				String[] parts = t1.name.split("_");
