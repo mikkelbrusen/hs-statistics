@@ -46,7 +46,6 @@ public class GeneralFeeds extends Thread{
 				
 				psem(parts[1]);						//Takes class specific semaphore.
 				ewp = t2.existsWithPrefix();
-				multEx.V();
 				
 				if(ewp){
 
