@@ -17,7 +17,8 @@ public class Feed extends Thread{
                 semaphore = new Template(semaphorePath, "feedSemaphore");
 				System.out.println("Looking for some file...");
                 try { semaphore.get(); } catch (Exception e) {continue;} // The threads should not get the same file.				t1.get();
-				semaphore.path = semaphorePath + "/feedSemaphore";
+				t1.get();
+                semaphore.path = semaphorePath + "/feedSemaphore";
 				semaphore.put();
 				System.out.println("Found file " + t1.name);
 				
