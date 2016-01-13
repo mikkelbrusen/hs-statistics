@@ -23,9 +23,7 @@ public class Template {
 
 				name_aux=child.name;
 				name=name_aux;									
-				ByteArrayOutputStream out=new ByteArrayOutputStream();
-				ConnectionInit.client.getFile(child.path,null,out);
-				out.close();
+
 				ConnectionInit.client.delete(child.path);
 				return;
 			}			
@@ -53,19 +51,6 @@ public class Template {
 					name_aux=child.name;
 					name=name_aux;
 					path = child.path;
-					ByteArrayOutputStream out=new ByteArrayOutputStream();
-					try {
-						ConnectionInit.client.getFile(child.path,null,out);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					try {
-						out.close();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
 					return true;	
 				}
 			} 
