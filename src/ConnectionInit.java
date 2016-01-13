@@ -24,24 +24,24 @@ public class ConnectionInit {
 			feed[i] = new Feed();
 			feed[i].start();
 		}
-		Userfeed = new UserFeeds[2];
-		for (int i = 0; i < 2; i++) 
-		{
-			Userfeed[i] = new UserFeeds();
-			Userfeed[i].start();
-		}
-		Gfeed = new GeneralFeeds[2];
-		for (int i = 0; i < 2; i++) 
-		{
-			Gfeed[i] = new GeneralFeeds();
-			Gfeed[i].start();
-		}
-		RAfeed = new ReqAccFeed[2];
-		for (int i = 0; i < 2; i++) 
-		{
-			RAfeed[i] = new ReqAccFeed();
-			RAfeed[i].start();
-		}
+//		Userfeed = new UserFeeds[2];
+//		for (int i = 0; i < 2; i++) 
+//		{
+//			Userfeed[i] = new UserFeeds();
+//			Userfeed[i].start();
+//		}
+//		Gfeed = new GeneralFeeds[2];
+//		for (int i = 0; i < 2; i++) 
+//		{
+//			Gfeed[i] = new GeneralFeeds();
+//			Gfeed[i].start();
+//		}
+//		RAfeed = new ReqAccFeed[2];
+//		for (int i = 0; i < 2; i++) 
+//		{
+//			RAfeed[i] = new ReqAccFeed();
+//			RAfeed[i].start();
+//		}
 	}
 	
 	public static void init() {
