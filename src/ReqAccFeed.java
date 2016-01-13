@@ -13,23 +13,14 @@ public class ReqAccFeed extends Thread {
 	Template t1,t2,t3;
 	String path1,path2,path3,path4;
 
-	private List<DbxEntry> result1;
-	private List<DbxEntry> result2;
-	private List<DbxEntry> result3;
-	private List<DbxEntry> result4;
+	private boolean result1;
+	private boolean result2;
+	private boolean result3;
+	private boolean result4;
 
 	
 	static Semaphore multEx = new Semaphore(1);
 	
-	private String getUserReq(String user)
-	{
-		return "/space/Users/" + user + "/Request";
-	}
-	private String getUserAcc(String user)
-	{
-		return "/space/Users/" + user + "/Access";
-	}
-
 	public void run()
 	{
 		try {
@@ -45,26 +36,28 @@ public class ReqAccFeed extends Thread {
 				String[] parts1 = t1.name.split("\\.");
 				String[] parts = parts1[0].split("_");
 				
-				path1 = getUserReq(parts[1]);
-				path2 = getUserReq(parts[2]);
-				path3 = getUserAcc(parts[1]);
-				path4 = getUserAcc(parts[2]);
+				if (!doesExist(parts[1]) || !doesExist(parts[2])){
+					System.out.println("User does not exist");
+					return;
+				}
+				
+				if (parts[1].equals(parts[2]))			//Cant add yourself
+				{
+					return;
+				}
 
 				multEx.P();
-				result1 = ConnectionInit.client.searchFileAndFolderNames(path1, parts[2]);
-				result2 = ConnectionInit.client.searchFileAndFolderNames(path2, parts[1]);
-				result3 = ConnectionInit.client.searchFileAndFolderNames(path3, parts[2]);
-				result4 = ConnectionInit.client.searchFileAndFolderNames(path4, parts[1]);
+				result1 = searchFor(getUserReq(parts[1]),parts[2]);
+				result2 = searchFor(getUserReq(parts[2]),parts[1]);
+				result3 = searchFor(getUserAcc(parts[1]),parts[2]);
+				result4 = searchFor(getUserAcc(parts[2]),parts[1]);
 
-				
 				if (parts[0].equals("REQ"))
 				{
-					if (!result2.isEmpty() && result3.isEmpty() && result4.isEmpty()) //The opposite client has received a req aswell
+					if (result2 && !result3 && !result4) //The opposite client has received a req aswell
 					{
-						for (DbxEntry f : result2)
-						{
-							ConnectionInit.client.delete(f.path);
-						}
+						ConnectionInit.client.delete(getUserReq(parts[2]) + "/" + parts[1]);
+
 						Template t2 = new Template(getUserAcc(parts[1]) + "/" + parts[2], parts[2]); 
 						t2.put(); //Make access file
 						Template t3 = new Template(getUserAcc(parts[2]) + "/" + parts[1], parts[1]); 
@@ -73,7 +66,7 @@ public class ReqAccFeed extends Thread {
 						multEx.V();
 						continue;
 					}
-					else if (!result1.isEmpty() || !result3.isEmpty() || !result4.isEmpty()) //Dont send the req further, since it exists already
+					else if (result1 || result3 || result4) //Dont send the req further, since it exists already
 					{
 						multEx.V();
 						continue;
@@ -95,6 +88,30 @@ public class ReqAccFeed extends Thread {
 			
 		} catch (Exception e){ e.printStackTrace(); }
 	}
+	private boolean doesExist(String user) throws DbxException {
+		List<DbxEntry> result;
+		result = ConnectionInit.client.searchFileAndFolderNames("/space/Users/" + user, "Statistics");
+		return !result.isEmpty();
+	}
+	private boolean searchFor(String path, String user) throws DbxException {
+		List<DbxEntry> result;
+		result = ConnectionInit.client.searchFileAndFolderNames(path, user);
+		for (DbxEntry f : result)
+		{
+			return f.name.equals(user);
+		}		
+		return false;
+	}
+	private String getUserReq(String user)
+	{
+		return "/space/Users/" + user + "/Request";
+	}
+	private String getUserAcc(String user)
+	{
+		return "/space/Users/" + user + "/Access";
+	}
+	
+
 
 
 }
