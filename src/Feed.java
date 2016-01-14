@@ -5,8 +5,6 @@ public class Feed extends Thread{
 
 	Template t1,t2,t3,semaphore;
 	String semaphorePath = "/space/FeedSemaphore";
-
-	static Semaphore multEx = new Semaphore(1);
 	
 	public void run() 
 	{
