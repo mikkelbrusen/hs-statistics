@@ -11,7 +11,6 @@ public class ReqAccFeed extends Thread {
 	final String reqAcc = "/space/FriendReqAcc";
 	
 	Template t1,t2,t3;
-	String path1,path2,path3,path4;
 
 	private boolean result1;
 	private boolean result2;
@@ -45,7 +44,7 @@ public class ReqAccFeed extends Thread {
 				{
 					return;
 				}
-
+								
 				multEx.P();
 				result1 = searchFor(getUserReq(parts[1]),parts[2]);
 				result2 = searchFor(getUserReq(parts[2]),parts[1]);
@@ -98,7 +97,10 @@ public class ReqAccFeed extends Thread {
 		result = ConnectionInit.client.searchFileAndFolderNames(path, user);
 		for (DbxEntry f : result)
 		{
-			return f.name.equals(user);
+			if (f.name.equals(user))
+			{
+				return true;
+			}
 		}		
 		return false;
 	}
