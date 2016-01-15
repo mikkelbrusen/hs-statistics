@@ -10,7 +10,7 @@ public class ReqAccFeed extends Thread {
 	
 	final String reqAcc = "/space/FriendReqAcc";
 	
-	Template t1,t2,t3;
+	Template t1,t2,t3,t4;
 
 	private boolean result1;
 	private boolean result2;
@@ -35,75 +35,66 @@ public class ReqAccFeed extends Thread {
 				String[] parts1 = t1.name.split("\\.");
 				String[] parts = parts1[0].split("_");
 				
-				if (!doesExist(parts[1]) || !doesExist(parts[2])){
-					System.out.println("User does not exist");
-					return;
+				if (parts[1].equals(parts[2]))			//A user cannot add himself
+				{
+					System.out.println("A user cannot add himself.");
+					continue;
 				}
 				
-				if (parts[1].equals(parts[2]))			//Cant add yourself
-				{
-					return;
+				t1 = new Template(getUserReq(parts[1]),parts[2]);
+				t2 = new Template(getUserReq(parts[2]),parts[1]);
+				t3 = new Template(getUserAcc(parts[1]),parts[2]);
+				t4 = new Template(getUserAcc(parts[2]),parts[1]);
+				
+				if (!t1.doesExist() || !t2.doesExist()){
+					System.out.println("User does not exist.");
+					continue;
 				}
-								
-				multEx.P();
-				result1 = searchFor(getUserReq(parts[1]),parts[2]);
-				result2 = searchFor(getUserReq(parts[2]),parts[1]);
-				result3 = searchFor(getUserAcc(parts[1]),parts[2]);
-				result4 = searchFor(getUserAcc(parts[2]),parts[1]);
+
+				
+				multEx.P();		//Search also has to be atomic because action is based on the result.
+				
+				result1 = t1.searchFor();
+				result2 = t2.searchFor();
+				result3 = t3.searchFor();
+				result4 = t4.searchFor();
 
 				if (parts[0].equals("REQ"))
 				{
 					if (result2 && !result3 && !result4) //The opposite client has received a req aswell
 					{
-						ConnectionInit.client.delete(getUserReq(parts[2]) + "/" + parts[1]);
+						t1.path = getUserReq(parts[2]) + "/" + parts[1];
+						t1.remove();
 
 						Template t2 = new Template(getUserAcc(parts[1]) + "/" + parts[2], parts[2]); 
-						t2.put(); //Make access file
+						t2.put(); 			//Make access file
 						Template t3 = new Template(getUserAcc(parts[2]) + "/" + parts[1], parts[1]); 
-						t3.put(); //Make access file
+						t3.put(); 			//Make access file
 						System.out.println(parts[1] + " and " + parts[2] + " are now friends.");
-						multEx.V();
-						continue;
 					}
-					else if (result1 || result3 || result4) //Dont send the req further, since it exists already
+					else if (result1 || result3 || result4) 	//Dont send the req further, since it exists already
 					{
-						multEx.V();
-						continue;
+						if(result1){
+							System.out.println("Request already exists.");
+						}
+						else{
+							System.out.println("Already friends.");
+						}
 					}
 					else //Move request file to user req folder
 					{
 						Template t2 = new Template(getUserReq(parts[1]) + "/" + parts[2], parts[2]);
 						t2.put();		
-						multEx.V();
-						continue;
 					}
-				} 
-				else
-				{
-					multEx.V();
 				}
+				multEx.V();
+
 				
 			}
 			
 		} catch (Exception e){ e.printStackTrace(); }
 	}
-	private boolean doesExist(String user) throws DbxException {
-		List<DbxEntry> result;
-		result = ConnectionInit.client.searchFileAndFolderNames("/space/Users/" + user, "Statistics");
-		return !result.isEmpty();
-	}
-	private boolean searchFor(String path, String user) throws DbxException {
-		List<DbxEntry> result;
-		result = ConnectionInit.client.searchFileAndFolderNames(path, user);
-		for (DbxEntry f : result)
-		{
-			if (f.name.equals(user))
-			{
-				return true;
-			}
-		}		
-		return false;
-	}
+
 	private String getUserReq(String user)
 	{
 		return "/space/Users/" + user + "/Request";

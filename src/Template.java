@@ -3,6 +3,7 @@ import com.dropbox.core.DbxException;
 import com.dropbox.core.DbxWriteMode;
 
 import java.io.*;
+import java.util.List;
 
 public class Template {
 	String path;
@@ -63,6 +64,23 @@ public class Template {
 		ByteArrayInputStream in = new ByteArrayInputStream(new byte[] {'1'}); //Det her er fucked
 		ConnectionInit.client.uploadFile(path, DbxWriteMode.add(), -1, in);
 		return;
+	}
+	public boolean doesExist() throws DbxException {
+		List<DbxEntry> result;
+		result = ConnectionInit.client.searchFileAndFolderNames("/space/Users/" + name, "Statistics");
+		return !result.isEmpty();
+	}
+	public boolean searchFor() throws DbxException {
+		List<DbxEntry> result;
+		result = ConnectionInit.client.searchFileAndFolderNames(path, name);
+		for (DbxEntry f : result)
+		{
+			if (f.name.equals(name))
+			{
+				return true;
+			}
+		}		
+		return false;
 	}
 
 }
