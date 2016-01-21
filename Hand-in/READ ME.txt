@@ -1,0 +1,6 @@
+The Dropbox jar files from dropbox-java-sdk-1.8.2/lib must be added to the library before the program can run.
+
+Webpage for submitting statistics: https://mikkelbrusen.github.io
+Webpage for viewing statistics:	https://mikkelbrusen.github.io/stats/
+
+Notice that submitting data will add it to your own Dropbox folder since you are not a part of our shared folder.	
