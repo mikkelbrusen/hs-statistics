@@ -19,6 +19,8 @@ public class ReqAccFeed extends Thread {
 
 	
 	static Semaphore multEx = new Semaphore(1);
+	static Semaphore multEx2 = new Semaphore(1);
+
 	
 	public void run()
 	{
@@ -52,7 +54,7 @@ public class ReqAccFeed extends Thread {
 				}
 
 				
-				multEx.P();		//Search also has to be atomic because action is based on the result.
+				multEx2.P();		//Search also has to be atomic because action is based on the result.
 				
 				result1 = t1.searchFor();
 				result2 = t2.searchFor();
@@ -87,7 +89,7 @@ public class ReqAccFeed extends Thread {
 						t2.put();		
 					}
 				}
-				multEx.V();
+				multEx2.V();
 
 				
 			}
